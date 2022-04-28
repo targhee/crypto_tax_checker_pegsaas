@@ -1,0 +1,18 @@
+{% extends "web/app/app_base.html" %}
+{% load static %}
+{% block app %}
+  <section class="app-card">
+    <div class="row align-items-center">
+      <div class="col-md order-md-last">
+        <img class="img-fluid" src="{% static 'images/undraw/undraw_joyride.svg' %}" alt="Yay!">
+      </div>
+      <div class="col-md">
+        <h3>Yay! You have access!</h3>
+        <p class="lead">
+          If you're seeing this page then you're subscribed to a plan.
+          Thanks for being a customer!
+        </p>
+      </div>
+    </div>
+  </section>
+{% endblock %}
