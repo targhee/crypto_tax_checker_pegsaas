@@ -1,0 +1,20 @@
+{% extends "web/app/app_base.html" %}
+{% block app %}
+    <div class="col-lg">
+      <section class="app-card py-5">
+          <form method="POST" enctype="multipart/form-data" action={% url 'loader:loader-home' %}>
+              {% csrf_token %}
+              <fieldset class="form-control">
+                  <legend class="border-bottom mb-4">Crypto History File Upload</legend>
+                  <p>This is where you will upload your tax file from Zen Ledger (normally this is a .csv file)</p>
+                  <p><b>Crypto Tax Checker</b> analyzes this file and alerts you to possible ways to save on taxes.</p>
+                  <br>
+                  {{ form }}
+              <div class="form-group">
+                  <button class="btn btn-outline-info" type="submit">Upload</button>
+              </div>
+              </fieldset>
+          </form>
+      </section>
+    </div>
+{% endblock app %}

@@ -1,6 +1,6 @@
 <nav class="navbar navbar-light navbar-expand-md bg-white shadow-sm" >
   <div class="container">
-    <a class="navbar-brand {% if request.path == '/' %}active{% endif %}" href="{% url 'web:home' %}">
+    <a class="navbar-brand {% if request.path == '/' %}active{% endif %}" href="{% url 'loader:loader-home' %}">
       {{project_meta.NAME}}
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

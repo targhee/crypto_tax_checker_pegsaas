@@ -33,6 +33,22 @@ Create database tables:
 ./manage.py runserver
 ```
 
+## Playing with Postgres from Command Line
+
+```bash
+psql
+```
+
+will open a connection to terminal. To see Users, use `\du`
+
+```bash
+\list       # List the databases
+\connect    # Connect to a database
+\du         # List users in current database
+\dt         # List tables in current database
+\q          # quit
+```
+
 ## Building front-end
 
 To build JavaScript and CSS files, first install npm packages:

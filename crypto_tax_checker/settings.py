@@ -64,6 +64,8 @@ PROJECT_APPS = [
     'apps.subscriptions.apps.SubscriptionConfig',
     'apps.users.apps.UserConfig',
     'apps.web',
+    'apps.loader.apps.LoaderConfig',
+    'apps.portfolio.apps.PortfolioConfig',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PEGASUS_APPS + PROJECT_APPS
@@ -260,11 +262,11 @@ CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 
 # replace any values below with specifics for your project
 PROJECT_METADATA = {
-    'NAME': 'crypto_tax_checker',
+    'NAME': 'Crypto Tax Checker',
     'URL': 'http://localhost:8000',
     'DESCRIPTION': "Quickly check your tax records for common mistakes.",
     'IMAGE': 'https://upload.wikimedia.org/wikipedia/commons/2/20/PEO-pegasus_black.svg',
-    'KEYWORDS': 'SaaS, django',
+    'KEYWORDS': 'crypto, cryptocurrency, bitcoin, ethereum, tax',
     'CONTACT_EMAIL': 'support@cryptotaxchecker.com',
 }
 
