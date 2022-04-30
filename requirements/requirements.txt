@@ -129,6 +129,9 @@ wcwidth==0.2.5
     # via prompt-toolkit
 wrapt==1.14.0
     # via deprecated
+# These are for S3 storage.
+boto3==1.21.43
+django-storages==1.12.3
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
