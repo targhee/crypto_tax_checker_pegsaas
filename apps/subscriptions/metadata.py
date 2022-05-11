@@ -134,7 +134,6 @@ def get_active_plan_interval_metadata() -> List[PlanIntervalMetadata]:
 # The first element is considered the default
 ACTIVE_PLAN_INTERVALS = [
     PlanInterval.year,
-    PlanInterval.month,
 ]
 
 
@@ -142,33 +141,14 @@ ACTIVE_PLAN_INTERVALS = [
 # with plans on your side
 ACTIVE_PRODUCTS = [
     ProductMetadata(
-        stripe_id='',
-        name=_('Starter'),
-        description=_('For hobbyists and side-projects'),
-        features=[
-            _('Up to 100 Widgets'),
-            _('Unlimited Widget Editing'),
-        ],
-    ),
-    ProductMetadata(
-        stripe_id='',
+        stripe_id='prod_Ld8lQJEx9m3Uvb',
         name=_('Standard'),
-        description=_('For small businesses and teams'),
+        description=_('Standard Crypto Tax Check'),
         is_default=True,
         features=[
-            _('Up to 500 Widgets'),
-            _('Unlimited Widget Editing'),
-            _('Advanced Widget Editing Features'),
-        ],
-    ),
-    ProductMetadata(
-        stripe_id='',
-        name=_('Premium'),
-        description=_('For small businesses and teams'),
-        features=[
-            _('Unlimited Widgets'),
-            _('All Features'),
-            _('Priority Support and Training'),
+            _('Check for Duplicate Transactions'),
+            _('List Transactions likely to be reported as Sales'),
+            _('List Matches'),
         ],
     ),
 ]
