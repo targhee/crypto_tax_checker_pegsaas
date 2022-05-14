@@ -1,0 +1,24 @@
+default_context:
+  _pegasus_version: 2022.4.2
+  author_name: TW
+  ci: github_actions
+  css_framework: bootstrap
+  css_theme: bootstrap-material
+  database: postgres
+  deploy_platform: heroku_docker
+  description: Quickly check your tax records for common mistakes.
+  domain_name: localhost:8000
+  email: support@cryptotaxchecker.com
+  enable_google_login: y
+  enable_twitter_login: y
+  front_end_framework: react
+  project_name: Crypto Tax Checker
+  project_slug: crypto_tax_checker
+  stripe_payment_mode: both
+  subscription_billing_model: default
+  use_api_keys: n
+  use_docker: y
+  use_impersonation: n
+  use_sentry: y
+  use_subscriptions: y
+  use_teams: n

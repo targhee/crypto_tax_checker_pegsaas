@@ -1,0 +1,41 @@
+{% extends "web/app/app_base.html" %}
+{% load static %}
+{% load i18n %}
+{% block app %}
+<section class="app-card">
+  <h3>Subscription Demo</h3>
+  <p class="lead">Basic examples to get you going with feature-gating based on subscriptions.</p>
+  <p>Tip: the source of this page can be found at <code>templates/subscriptions/demo.html</code></p>
+</section>
+<section class="app-card">
+  <h3>Changing Content Based on a Plan</h3>
+  <p>The text and color below will change based on whether you have an active subscription.</p>
+  {% if subscription %}
+    <div class="alert alert-success">
+      You're subscribed to {{ product.metadata.name }}! Hooray!
+    </div>
+  {% else %}
+    <div class="alert alert-info">
+      It doesn't look like you're subscribed. <a href="{{ subscription_urls.subscription_details }}">Upgrade Here!</a>
+    </div>
+  {% endif %}
+</section>
+<section class="app-card">
+  <h3>Viewing Subscription Details</h3>
+  <p>
+    If you're subscribed to a plan, go to
+    <a href="{{ subscription_urls.subscription_details }}">the subscription details page</a>
+    to see an example of showing information about the subscription.
+  </p>
+</section>
+<section class="app-card">
+  <h3>Restricting Access to a Page</h3>
+  <p>
+    <a href="{{ subscription_urls.subscription_gated_page }}">This page</a> is only available if you are subscribed to a plan.
+  </p>
+  <p>
+    The code for this page can be found in the <code>subscription_gated_page</code> view in
+    <code>apps/subscriptions/views.py</code>
+  </p>
+</section>
+{% endblock %}
