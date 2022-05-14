@@ -1,0 +1,26 @@
+FROM python:3.9-alpine
+ENV PYTHONUNBUFFERED=1
+
+# install psycopg2/cryptography dependencies
+RUN apk update
+RUN apk add postgresql-dev gcc python3-dev musl-dev libffi-dev
+RUN apk add --update nodejs npm
+
+RUN mkdir /code
+WORKDIR /code
+
+COPY requirements requirements/
+COPY requirements.txt requirements.txt
+RUN pip install -r requirements.txt
+COPY . /code/
+
+# build front end files
+RUN npm install
+RUN npm run build
+
+# why this has to be here:
+# https://stackoverflow.com/questions/59719175/where-to-run-collectstatic-when-deploying-django-app-to-heroku-using-docker
+RUN python manage.py collectstatic --noinput --settings=crypto_tax_checker.settings_heroku
+
+# in Heroku this is handled by the run command in heroku.yml
+# CMD exec gunicorn --bind 0.0.0.0:$PORT --workers 1 --threads 8 --timeout 0 crypto_tax_checker.wsgi:application

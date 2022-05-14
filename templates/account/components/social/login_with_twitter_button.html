@@ -1,0 +1,7 @@
+{% load i18n %}
+{% load socialaccount %}
+{% load static %}
+<a class="btn btn-outline-secondary w-100" href="{% provider_login_url 'twitter' %}">
+  <img class="socialicon" src="{% static 'images/socialauth/twitter-icon.svg' %}" alt="{% trans 'Twitter Logo' %}">
+  {% trans "Continue with Twitter" %}
+</a>
