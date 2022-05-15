@@ -10,3 +10,5 @@ celery-progress
 celery
 celery[redis]
 sentry-sdk
+boto3
+django-storages

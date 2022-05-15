@@ -27,6 +27,7 @@ urlpatterns = [
     path('users/', include('apps.users.urls')),
     path('subscriptions/', include('apps.subscriptions.urls')),
     path('', include('apps.web.urls')),
+    path('web', include('apps.web.urls')),
     path('pegasus/', include('pegasus.apps.examples.urls')),
     path('pegasus/employees/', include('pegasus.apps.employees.urls')),
     path('celery-progress/', include('celery_progress.urls')),
@@ -36,4 +37,6 @@ urlpatterns = [
     path('schemajs/', schemajs_view, name='api_schemajs'),
     # djstripe urls - for webhooks
     path("stripe/", include("djstripe.urls", namespace="djstripe")),
+    # Adding my portfolio urls
+    path('portfolio/', include('apps.portfolio.urls', namespace="portfolio")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

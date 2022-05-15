@@ -26,7 +26,11 @@ SECRET_KEY = 'fPjDSUSEavvRbvqQcnCnADfNuqQEWnijxdHsfRWR'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    ".crypto-tax-checker.herokuapp.com/",
+    "127.0.0.1",
+    ".localhost",
+]
 
 
 # Application definition
@@ -52,6 +56,7 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     'celery_progress',
     'djstripe',  # stripe integration
+    'storages',
 ]
 
 PEGASUS_APPS = [
@@ -63,7 +68,8 @@ PEGASUS_APPS = [
 PROJECT_APPS = [
     'apps.subscriptions.apps.SubscriptionConfig',
     'apps.users.apps.UserConfig',
-    'apps.web',
+    'apps.web.apps.WebConfig',
+    'apps.portfolio.apps.PortfolioConfig',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PEGASUS_APPS + PROJECT_APPS
@@ -260,11 +266,11 @@ CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 
 # replace any values below with specifics for your project
 PROJECT_METADATA = {
-    'NAME': 'Crypto Tax Checker - Docker None',
+    'NAME': 'Crypto Tax Checker',
     'URL': 'http://localhost:8000',
     'DESCRIPTION': "Quickly check your tax records for common mistakes.",
     'IMAGE': 'https://upload.wikimedia.org/wikipedia/commons/2/20/PEO-pegasus_black.svg',
-    'KEYWORDS': 'SaaS, django',
+    'KEYWORDS': 'crypto, cryptocurrency, bitcoin, ethereum, tax',
     'CONTACT_EMAIL': 'support@CryptoTaxChecker.com',
 }
 
@@ -309,3 +315,12 @@ if SENTRY_DSN:
         dsn=SENTRY_DSN,
         integrations=[DjangoIntegration()]
     )
+
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACT = None
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
