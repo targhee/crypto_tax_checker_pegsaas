@@ -84,6 +84,12 @@ will open a connection to terminal. To see Users, use `\du`
 make start
 ```
 
+To clean the volumes:
+```bash
+docker-compose down -v
+```
+
+
 **Native:**
 
 ```bash

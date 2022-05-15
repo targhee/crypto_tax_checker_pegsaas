@@ -3,24 +3,25 @@
 {% block app %}
   <section class="app-card py-5">
     <div class="row align-items-center">
-      <div class="col-md order-md-last">
-        <img class="img-fluid" src="{% static 'images/undraw/undraw_outer_space.svg' %}" alt="Fly Away!">
-      </div>
       <div class="col-md">
         <h3>You're Signed In!</h3>
-        <p class="lead">
-          This is your application's logged in home page.
-        </p>
-        <p>
-          Now go make something great!
-        </p>
+        <section class="app-card py-5">
+          <form method="POST" enctype="multipart/form-data" action={% url 'web:home' %}>
+              {% csrf_token %}
+              <fieldset class="form-control">
+                  <legend class="border-bottom mb-4">Crypto History File Upload</legend>
+                  <p>This is where you will upload your tax file from Zen Ledger (normally this is a .csv file)</p>
+                  <p><b>Crypto Tax Checker</b> analyzes this file and alerts you to possible ways to save on taxes.</p>
+                  <br>
+                  {{ form }}
+                  <br>
+              <div class="form-group">
+                  <button class="btn btn-outline-info" type="submit">Upload</button>
+              </div>
+              </fieldset>
+          </form>
+      </section>
       </div>
-    </div>
-  </section>
-  <section class="app-card">
-    <div>
-      <p>To add more to this page you can make new sections like this one.</p>
-      <p>Tip: the source of this page can be found at <code>templates/web/app_home.html</code></p>
     </div>
   </section>
 {% endblock %}

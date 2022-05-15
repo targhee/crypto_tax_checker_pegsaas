@@ -29,7 +29,7 @@ def _view_subscription(request, subscription_holder: SubscriptionModelBase):
     assert subscription_holder.has_active_subscription()
     return render(request, 'subscriptions/view_subscription.html', {
         'active_tab': 'subscription',
-        'page_title': _('Subscription | %(team)s') % {'team': request.team},
+        'page_title': _('Subscription'),
         'subscription': subscription_holder.active_stripe_subscription,
         'subscription_urls': get_subscription_urls(subscription_holder),
         'friendly_payment_amount': subscription_holder.get_subscription_metadata().get_price_display(
@@ -94,7 +94,7 @@ def subscription_demo(request, subscription_holder=None):
             subscription_holder.active_stripe_subscription
         ),
         'subscription_urls': get_subscription_urls(subscription_holder),
-        'page_title': _('Subscription Demo | %(team)s') % {'team': request.team},
+        'page_title': _('Subscription Demo ') ,
     })
 
 

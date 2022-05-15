@@ -1,0 +1,59 @@
+{% extends "web/base.html" %}
+{% block body %}
+    <h1> {{ list_view_type }} </h1>
+    {% if num_tx >= 0 %}
+        <cryptotx class="media content-section">
+            <div class="media-body">
+                <div class="article-metadata">
+                    {{ list_desc }}
+                </div>
+            </div>
+        </cryptotx>
+    {% endif %}
+    {% if list_view_type == "Complete" %}
+        <h3> Loading {{num_tx}} Transactions </h3>
+    {% elif list_view_type == "Duplicates" %}
+        <h3> Found {{num_tx}} Duplicates </h3>
+    {% elif list_view_type == "No Matches" %}
+        <h3> Found {{num_tx}} No Matches </h3>
+    {% endif %}
+    {% for transaction in object_list %}
+        <cryptotx class="media content-section">
+          <div class="media-body">
+              <small class="text-muted">{{ transaction.timestamp|date:'Y-m-d G:i:s' }}</small>
+              <small class="text-muted">{{ transaction.trade_type }}</small>
+              {% if transaction.trade_type == "Send" or transaction.trade_type == "sell" %}
+                <small class="text-muted">{{ transaction.out_asset }}</small>
+                <small class="text-muted">{{ transaction.out_qty }}</small>
+              {% elif transaction.trade_type == "Receive" or transaction.trade_type == "buy" %}
+                <small class="text-muted">{{ transaction.in_asset }}</small>
+                <small class="text-muted">{{ transaction.in_qty }}</small>
+              {% else %}
+                <small class="text-muted">{{ transaction.in_asset }}</small>
+                <small class="text-muted">{{ transaction.in_qty }}</small>
+              {% endif %}
+          </div>
+        </cryptotx>
+    {% endfor %}
+    {% if is_paginated %}
+
+      {% if page_obj.has_previous %}
+        <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+      {% endif %}
+
+      {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+          <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+          <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+      {% endif %}
+
+    {% endif %}
+{% endblock body %}
