@@ -12,7 +12,7 @@ build:
 release:
   image: django
   command:
-    - python manage.py migrate
+    - python manage.py makemigrations && python manage.py migrate
 run:
   web:
     command:
