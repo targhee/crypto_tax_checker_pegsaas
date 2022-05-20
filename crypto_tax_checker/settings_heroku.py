@@ -36,7 +36,7 @@ CSRF_COOKIE_SECURE = True
 
 USE_HTTPS_IN_ABSOLUTE_URLS = True
 
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = [
     'localhost:8000',
     "127.0.0.1:8000",

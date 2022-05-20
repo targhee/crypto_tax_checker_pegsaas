@@ -9,13 +9,15 @@ from .forms import CryptoHistoryUploadForm
 from django.core.files.storage import default_storage
 from apps.portfolio.helpers import load_and_parse_file
 
+from apps.portfolio.models import Transaction
+
 def drop_existing_files(user):
     # Drop any existing history files.
     exist_files = Historyfile.objects.filter(user=user)
     for e in exist_files:
         # e_file = os.path.join(settings.MEDIA_ROOT, str(e.upload_file))
         e_file = str(e.upload_file)
-        print(f"File located at {e_file}")
+        print(f"Delete file located at {e_file}")
         # Delete the physical file
         if default_storage.exists(e_file):
             default_storage.delete(e_file)
@@ -44,12 +46,21 @@ def home(request):
                 # Now delete the uploaded file since everything is saved.
                 #drop_existing_files(request.user)
 
-                return redirect('portfolio:portfolio-home')
-                # return render(request, 'web/app_home.html', context={
-                #     'active_tab': 'dashboard',
-                #     'page_title': _('Dashboard'),
-                #     'form': form,
-                #     'subscription': subscription_holder.active_stripe_subscription})
+                #return redirect('portfolio:portfolio-home')
+                dups = Transaction.objects.filter(duplicate=True)
+                num_dups = dups.count()
+                no_matches = Transaction.objects.filter(match_num="0", trade_type="Send")
+                num_nomatches = no_matches.count()
+                print(f"Number of transactions = {num_dups}")
+                return render(request, 'web/app_home.html', context={
+                    'active_tab': 'dashboard',
+                    'page_title': _('Dashboard'),
+                    'form': form,
+                    'duplicate_object_list': dups,
+                    'num_dups': num_dups,
+                    'nomatch_object_list': no_matches,
+                    'num_nomatches': num_nomatches,
+                    'subscription': subscription_holder.active_stripe_subscription})
         else:
             print("Initial read of the form")
             form = CryptoHistoryUploadForm()

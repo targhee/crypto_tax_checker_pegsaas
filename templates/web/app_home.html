@@ -21,6 +21,91 @@
               </fieldset>
           </form>
       </section>
+      <!--  Duplicates -->
+      {% if num_dups %}
+      <div class="app-card">
+          <div class="pg-columns">
+            <div class="pg-column">
+              <h1 class="pg-title">Found {{num_dups}} Duplicate Transaction</h1>
+              <h2 class="pg-subtitle">Found Duplicate Transactions (same timestamp, asset & quantity).</h2>
+              <p>An inspection found some potential duplicate transactions (same timestamp, asset, & quantity).
+              </p>
+              <p>Transactions that are listed as 'exchange:Manual' are even more suspicious because they
+                 may have been entered manually by the owner who may have accidentally entered the same
+                 transaction multiple times.
+              </p><p>
+                 Inspect the following transactions closely because they may be reported as sales and show up as capital gains.
+              </p>
+              <hr>
+                {% for transaction in duplicate_object_list %}
+                <cryptotx class="media content-section">
+                    <div class="media-body">
+                        <small class="text-muted">{{ transaction.timestamp|date:'Y-m-d G:i:s' }}</small>
+                        <small class="text-muted">{{ transaction.trade_type }}</small>
+                        {% if transaction.trade_type == "Send" or transaction.trade_type == "sell" %}
+                        <small class="text-muted">{{ transaction.out_asset }}</small>
+                        <small class="text-muted">{{ transaction.out_qty }}</small>
+                        {% elif transaction.trade_type == "Receive" or transaction.trade_type == "buy" %}
+                        <small class="text-muted">{{ transaction.in_asset }}</small>
+                        <small class="text-muted">{{ transaction.in_qty }}</small>
+                        {% else %}
+                        <small class="text-muted">{{ transaction.in_asset }}</small>
+                        <small class="text-muted">{{ transaction.in_qty }}</small>
+                        {% endif %}
+                    </div>
+                </cryptotx>
+                {% endfor %}
+            </div>
+          </div>
+      </div>
+      {% endif %}
+      <!--  No Matches -->
+      {% if num_nomatches %}
+      <div class="app-card">
+          <div class="pg-columns">
+              <div class="pg-column">
+                  <h1 class="pg-title">Found {{num_nomatches}} Unmatched Transactions</h1>
+                  <h2 class="pg-subtitle">Discovered some transactions that couldn't be matched for you to check.</h2>
+                  <p>An inspection found some 'Send' transactions could not be matched to a 'Receive' transaction</p>
+                  <p>The following reasons could explain this:</p>
+                  <ol>
+                    <li>The coin was sent as payment to someone. In this case, the coin is correctly interpreted as a 'Sell' action.</li>
+                    <li>The coin was sent to another exchange that the tax software was not aware of.
+                         In this case, upload the other exchange so the matching 'Receive' can be found.</li>
+                    <li>The coin was sent to a wallet that you control. In this case, the wallet should
+                        be added or a manual transaction added so this will not be listed as a sale.<br>
+                        Be careful using this because if the IRS audits you later and you don't have
+                        the wallet address or the wallet indicates the coin left the wallet within the
+                        tax year, you'll be liable for taxes (and potentially penalties).<br>
+                        Remember, for most coins, the blockchain is a complete history of transactions
+                        that the IRS can verify against your claims.</li>
+                  </ol>
+                  <p>
+                  Inspect the following transactions closely because they mayy be reported as sales and show up as capital gains.
+                  </p>
+                  <hr>
+                  {% for transaction in nomatch_object_list %}
+                  <cryptotx class="media content-section">
+                      <div class="media-body">
+                          <small class="text-muted">{{ transaction.timestamp|date:'Y-m-d G:i:s' }}</small>
+                          <small class="text-muted">{{ transaction.trade_type }}</small>
+                          {% if transaction.trade_type == "Send" or transaction.trade_type == "sell" %}
+                          <small class="text-muted">{{ transaction.out_asset }}</small>
+                          <small class="text-muted">{{ transaction.out_qty }}</small>
+                          {% elif transaction.trade_type == "Receive" or transaction.trade_type == "buy" %}
+                          <small class="text-muted">{{ transaction.in_asset }}</small>
+                          <small class="text-muted">{{ transaction.in_qty }}</small>
+                          {% else %}
+                          <small class="text-muted">{{ transaction.in_asset }}</small>
+                          <small class="text-muted">{{ transaction.in_qty }}</small>
+                          {% endif %}
+                      </div>
+                  </cryptotx>
+                  {% endfor %}
+              </div>
+          </div>
+      </div>
+      {% endif %}
       </div>
     </div>
   </section>
