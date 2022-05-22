@@ -21,6 +21,32 @@
               </fieldset>
           </form>
       </section>
+      <!--  Yearly Net Sales Summary -->
+      {% if summary %}
+      <div class="app-card">
+          <div class="pg-columns">
+              <div class="pg-column">
+                  <h1 class="pg-title">Calculated Net Sales </h1>
+                  <h2 class="pg-subtitle">Below are the crypto sales during the year</h2>
+                  <hr>
+                  <cryptotx class="media content-section">
+                      <div class="media-body">
+                          {% for li in summary %}
+                            {% if li.sum_total %}
+                              <small class="text-muted border border-2">{{ li.year }}     Total Sales: {{ li.total_sales }}</small> <br>
+                              <small class="text-muted border border-2">{{ li.year }}     Total Duplicate Sales: {{ li.duplicate_sales }}</small> <br>
+                              <small class="text-muted border border-2">{{ li.year }}     Total Unmatched Sales: {{ li.unmatched_sales }}</small> <br>
+                              <small class="text-muted">                            -----------------------------</small> <br>
+                              <small class="text-muted border border-2">{{ li.year }}               Total Sales: {{ li.sum_total }}</small> <br>
+                              <hr>
+                            {% endif %}
+                          {% endfor %}
+                      </div>
+                  </cryptotx>
+              </div>
+          </div>
+      </div>
+      {% endif %}
       <!--  Duplicates -->
       {% if num_dups %}
       <div class="app-card">

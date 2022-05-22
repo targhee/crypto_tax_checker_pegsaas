@@ -1,9 +1,11 @@
 import os
+from datetime import datetime
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from django.db.models import Q
 from .models import Historyfile
 from .forms import CryptoHistoryUploadForm
 from django.core.files.storage import default_storage
@@ -41,21 +43,53 @@ def home(request):
                 nfile = str(crypto_history.upload_file)
                 print(f"Crypto History Filename: {nfile}")
                 # Now let's read and parse the file.
-                result = load_and_parse_file(request.user, nfile)
+                try:
+                    result = load_and_parse_file(request.user, nfile)
+                except:
+                    # delete the database entry.
+                    drop_existing_files(request.user)
+                    # Delete the physical file
+                    if default_storage.exists(nfile):
+                        default_storage.delete(nfile)
                 messages.success(request, f"Success loading {os.path.basename(nfile)}")
                 # Now delete the uploaded file since everything is saved.
                 #drop_existing_files(request.user)
 
                 #return redirect('portfolio:portfolio-home')
+
                 dups = Transaction.objects.filter(duplicate=True)
                 num_dups = dups.count()
-                no_matches = Transaction.objects.filter(match_num="0", trade_type="Send")
+                no_matches = Transaction.objects.filter(Q(match_num="0") & Q(trade_type="Send") | Q(trade_type='sell'))
                 num_nomatches = no_matches.count()
-                print(f"Number of transactions = {num_dups}")
+                all_sales = Transaction.objects.filter(Q(trade_type='sell') | Q(trade_type='Send'))
+                summary = []
+                # Create a list of all the years from 2015 until now
+                for year in range(2015, int(datetime.now().year)):
+                    str_year = str(year)
+                    # Get all the sales from this year
+                    year_sales = [x.out_qty for x in all_sales if (x.timestamp.strftime("%Y") == str_year)]
+                    # Grab all the duplicate sales from that year
+                    year_duplicate_sales = [x.out_qty for x in dups if (x.timestamp.strftime("%Y") == str_year) and \
+                                            (x.trade_type == 'sell' or x.trade_type == 'Send')]
+                    # Grab all the unmatches sales from that year
+                    year_unmatched_sales = [x.out_qty for x in no_matches if (x.timestamp.strftime("%Y") == str_year)]
+                    sum_total_sales = sum(list(year_sales))
+                    sum_duplicate_sales = sum(list(year_duplicate_sales))
+                    sum_unmatched_sales = sum(list(year_unmatched_sales))
+                    sum_sales = sum_total_sales + sum_duplicate_sales + sum_unmatched_sales
+                    summary.append({
+                        'year' : year,
+                        'total_sales' : sum_total_sales,
+                        'duplicate_sales' : sum_duplicate_sales,
+                        'unmatched_sales' : sum_unmatched_sales,
+                        'sum_total' : sum_sales
+                    })
+                #print(f"Summary = {summary}")
                 return render(request, 'web/app_home.html', context={
                     'active_tab': 'dashboard',
                     'page_title': _('Dashboard'),
                     'form': form,
+                    'summary': summary,
                     'duplicate_object_list': dups,
                     'num_dups': num_dups,
                     'nomatch_object_list': no_matches,
