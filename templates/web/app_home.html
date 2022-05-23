@@ -66,17 +66,17 @@
                 {% for transaction in duplicate_object_list %}
                 <cryptotx class="media content-section">
                     <div class="media-body">
-                        <small class="text-muted">{{ transaction.timestamp|date:'Y-m-d G:i:s' }}</small>
-                        <small class="text-muted">{{ transaction.trade_type }}</small>
+                        <small class="text-muted border border-2">{{ transaction.timestamp|date:'Y-m-d G:i:s' }}</small>
+                        <small class="text-muted border border-2">{{ transaction.trade_type }}</small>
                         {% if transaction.trade_type == "Send" or transaction.trade_type == "sell" %}
-                        <small class="text-muted">{{ transaction.out_asset }}</small>
-                        <small class="text-muted">{{ transaction.out_qty }}</small>
+                        <small class="text-muted border border-2">{{ transaction.out_asset }}</small>
+                        <small class="text-muted border border-2">{{ transaction.out_qty }}</small>
                         {% elif transaction.trade_type == "Receive" or transaction.trade_type == "buy" %}
-                        <small class="text-muted">{{ transaction.in_asset }}</small>
-                        <small class="text-muted">{{ transaction.in_qty }}</small>
+                        <small class="text-muted border border-2">{{ transaction.in_asset }}</small>
+                        <small class="text-muted border border-2">{{ transaction.in_qty }}</small>
                         {% else %}
-                        <small class="text-muted">{{ transaction.in_asset }}</small>
-                        <small class="text-muted">{{ transaction.in_qty }}</small>
+                        <small class="text-muted border border-2">{{ transaction.in_asset }}</small>
+                        <small class="text-muted border border-2">{{ transaction.in_qty }}</small>
                         {% endif %}
                     </div>
                 </cryptotx>
@@ -113,17 +113,17 @@
                   {% for transaction in nomatch_object_list %}
                   <cryptotx class="media content-section">
                       <div class="media-body">
-                          <small class="text-muted">{{ transaction.timestamp|date:'Y-m-d G:i:s' }}</small>
-                          <small class="text-muted">{{ transaction.trade_type }}</small>
+                          <small class="text-muted border border-2">{{ transaction.timestamp|date:'Y-m-d G:i:s' }}</small>
+                          <small class="text-muted border border-2">{{ transaction.trade_type }}</small>
                           {% if transaction.trade_type == "Send" or transaction.trade_type == "sell" %}
-                          <small class="text-muted">{{ transaction.out_asset }}</small>
-                          <small class="text-muted">{{ transaction.out_qty }}</small>
+                          <small class="text-muted border border-2">{{ transaction.out_asset }}</small>
+                          <small class="text-muted border border-2">{{ transaction.out_qty }}</small>
                           {% elif transaction.trade_type == "Receive" or transaction.trade_type == "buy" %}
-                          <small class="text-muted">{{ transaction.in_asset }}</small>
-                          <small class="text-muted">{{ transaction.in_qty }}</small>
+                          <small class="text-muted border border-2">{{ transaction.in_asset }}</small>
+                          <small class="text-muted border border-2">{{ transaction.in_qty }}</small>
                           {% else %}
-                          <small class="text-muted">{{ transaction.in_asset }}</small>
-                          <small class="text-muted">{{ transaction.in_qty }}</small>
+                          <small class="text-muted border border-2">{{ transaction.in_asset }}</small>
+                          <small class="text-muted border border-2">{{ transaction.in_qty }}</small>
                           {% endif %}
                       </div>
                   </cryptotx>
