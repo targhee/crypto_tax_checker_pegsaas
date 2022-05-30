@@ -7,7 +7,7 @@ default_context:
   database: postgres
   deploy_platform: heroku_docker
   description: Quickly check your tax records for common mistakes.
-  domain_name: localhost:8000
+  domain_name: https://crypto-tax-checker.herokuapp.com
   email: support@CryptoTaxChecker.com
   enable_google_login: y
   enable_twitter_login: y

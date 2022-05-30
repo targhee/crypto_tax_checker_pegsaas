@@ -267,7 +267,7 @@ CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 # replace any values below with specifics for your project
 PROJECT_METADATA = {
     'NAME': 'Crypto Tax Checker',
-    'URL': 'http://localhost:8000',
+    'URL': 'https://crypto-tax-checker.herokuapp.com',
     'DESCRIPTION': "Quickly check your tax records for common mistakes.",
     'IMAGE': 'https://upload.wikimedia.org/wikipedia/commons/2/20/PEO-pegasus_black.svg',
     'KEYWORDS': 'crypto, cryptocurrency, bitcoin, ethereum, tax',
