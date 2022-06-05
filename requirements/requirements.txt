@@ -132,6 +132,8 @@ wrapt==1.14.0
 # These are for S3 storage.
 boto3==1.21.43
 django-storages==1.12.3
-
+# For datetime parsing
+rfc3339==6.2
+iso8601==1.0.2
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

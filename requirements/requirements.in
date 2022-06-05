@@ -12,3 +12,5 @@ celery[redis]
 sentry-sdk
 boto3
 django-storages
+rfc3339
+iso8601
