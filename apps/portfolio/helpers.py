@@ -1,4 +1,5 @@
 import os
+import logging
 from django.conf import settings
 from crypto.zen_transaction import process_zen_ledger
 from crypto.cryptotax_functions import find_duplicated_transactions, find_paired_transactions4
@@ -21,12 +22,12 @@ def load_and_parse_file(current_user, file_2_process):
     # Run some audits on the incoming transactions
     # A simple check for duplicated transactions
     duplicate_list, duplicate_string = find_duplicated_transactions(transaction_list)
-    print("---------------------------------------------------------")
-    print(duplicate_string)
-    print("---------------------------------------------------------")
-    print(f"Size of duplicates is {len(duplicate_list)}")
+    logging.debug("---------------------------------------------------------")
+    logging.debug(duplicate_string)
+    logging.debug("---------------------------------------------------------")
+    logging.debug(f"Size of duplicates is {len(duplicate_list)}")
     for transaction in duplicate_list:
-        print(f"Duplicate: {transaction}")
+        logging.debug(f"Duplicate: {transaction}")
 
     transactions, matched_pairs, unmatched_tx, function_desc_string = \
         find_paired_transactions4(transaction_list)

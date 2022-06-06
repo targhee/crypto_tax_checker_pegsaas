@@ -3,28 +3,29 @@ import os
 import csv
 import copy
 import datetime
+import logging
 from crypto.cryptotax import CryptoTaxMatch
 
 def populate_transaction_types(transactions):
 	purchases = []
 	sales = []
 	for tx in transactions:
-		print("-------------------------------------------------")
-		print(f"TX: {tx}")
+		logging.info("-------------------------------------------------")
+		logging.info(f"TX: {tx}")
 		if (tx.get_trade_type() == "buy") or (tx.get_trade_type() == "Receive"):
-			print(f"Purchase: {tx}")
+			logging.info(f"Purchase: {tx}")
 			purchases.append(tx)
 		elif (tx.get_trade_type() == "sell") or (tx.get_trade_type() == "Send"):
-			print(f"Sale: {tx}")
+			logging.info(f"Sale: {tx}")
 			sales.append(tx)
-	print("-------------------------------------------------")
+	logging.info("-------------------------------------------------")
 	return purchases, sales
 
 def reconcile_transactions(purchases, sales) :
 	tax_match = []
 	# First, pair up purchases with each sale.
 	for sell_tx in sales:
-		print("--------------------------------------------------------------------------------------")
+		logging.info("--------------------------------------------------------------------------------------")
 		#sell_tx.set_reconciled(False)
 		#if sell_tx.get_reconciled() != None :
 		# sell_tx_reconc = sell_tx.get_reconciled()
@@ -49,13 +50,13 @@ def reconcile_transactions(purchases, sales) :
 					break
 				#if not buy_tx.get_reconciled():
 				#	buy_tx.set_reconciled("No")
-				print("Index is " + str(index))
+				#print("Index is " + str(index))
 				# print("Transaction: " + str(buy_tx.get_ttype()) + " occurred on " + str(buy_tx.get_timestamp()) +
 				# 	" to " + str(buy_tx.get_ttype()) + " " + str(buy_tx.get_qty()) + " of " +
 				# 	str(buy_tx.get_asset()) + " for " + str((float(buy_tx.get_qty()) *
 				# 	float(buy_tx.get_spot_price()))) + "[" + str(float(buy_tx.get_basis())) + "] " +
 				# 	" | Reconciled: " + buy_tx.get_reconciled())
-				print(f"Buy Transaction: {buy_tx}")
+				logging.debug(f"Buy Transaction: {buy_tx}")
 				# Buy transaction ammount completely consumed.
 				if buy_tx.get_in_qty() <= match_qty:
 					buy_tx.set_reconciled(True)
@@ -67,7 +68,7 @@ def reconcile_transactions(purchases, sales) :
 					original_tx = copy.deepcopy(buy_tx)
 					new_tx = copy.deepcopy(buy_tx)
 					parts = original_tx.get_part()
-					print("Need to duplicate the buy_tx")
+					logging.debug("Need to duplicate the buy_tx")
 					# create new transaction that fulfills the sell tx.
 					new_tx.set_in_qty(match_qty)
 					# Since splitting, set new basis
@@ -86,7 +87,7 @@ def reconcile_transactions(purchases, sales) :
 					match_qty = match_qty - new_tx.get_in_qty()
 					# insert the new tx before current one.
 					#purchases.insert(index, new_tx)
-					print("Index is " + str(index))
+					logging.debug("Index is " + str(index))
 					# print("New Transaction: " + str(new_tx.get_ttype()) + " occurred on " + str(new_tx.get_timestamp()) +
 					# 	" to " + str(new_tx.get_ttype()) + " " + str(new_tx.get_qty()) + " of " +
 					# 	str(new_tx.get_asset()) + " for " + str((float(new_tx.get_qty()) *
@@ -106,41 +107,18 @@ def reconcile_transactions(purchases, sales) :
 			index = index + 1
 	return tax_match
 
-def print_queue(queue_to_print, header_text):
-	print("\n--------------------------------------------------------------")
-	print(str(header_text))
-	print("---------------------")
-	for trans in queue_to_print:
-		trans_reconc = "No"
-		if trans.get_reconciled() != None :
-			trans_reconc = trans.get_reconciled()
-
-		cost = float(trans.get_qty()) * float(trans.get_spot_price())
-
-#		print("Transaction: " + str(trans.get_ttype()) + " occurred on " +
-#			str(trans.get_timestamp()) + " to " + str(trans.get_ttype()) +
-#			" " + str(trans.get_qty()) + " of " + str(trans.get_asset()) +
-#			" for " + str(round(cost), 2) + "[" +
-#			str(round(float(trans.get_basis()),2)) + "] " + " | Reconciled:" +
-#			str(trans_reconc) + " | " + str(trans.get_part()) + " | " + trans.get_notes())
-		print("Transaction: %s occurred on %s to %s %f of %s for %.2f [%.2f] | Reconciled:%s | %d | %s " % 
-			(str(trans.get_ttype()), str(trans.get_timestamp()), str(trans.get_ttype()), trans.get_qty(),
-			str(trans.get_asset()), cost, float(trans.get_basis()),
-			str(trans_reconc), trans.get_part(), trans.get_notes()))
-	print("\n--------------------------------------------------------------\n")
-
 def find_unpaired_transactions(transactions):
 	receive = []
 	sent = []
 	#transactions_copy = copy.deepcopy(transactions)
 	for tx in transactions:
-		print("-------------------------------------------------")
+		logging.debug("-------------------------------------------------")
 		# print(f"TX: {tx}")
 		if (tx.get_trade_type() == "Send"):
-			#print(f"Send: {tx}")
+			#logging.debug(f"Send: {tx}")
 			sent.append(tx)
 		elif (tx.get_trade_type() == "Receive"):
-			#print(f"Sale: {tx}")
+			#logging.debug(f"Sale: {tx}")
 			receive.append(tx)
 	# print("-------------------------------------------------")
 	# print(f"RxItems={len(receive)}; SentItems={len(sent)}")
@@ -167,7 +145,7 @@ def find_unpaired_transactions(transactions):
 					rx_ts = datetime.datetime.fromisoformat(rx.get_timestamp())
 					tx_ts = datetime.datetime.fromisoformat(tx.get_timestamp())
 					if (rx_ts > tx_ts) and (rx_ts - tx_ts < datetime.timedelta(hours=12)):
-						#print("Yeehaw!! Match found!")
+						#logging.debug("Yeehaw!! Match found!")
 						rx.set_reconciled(True)
 						tx.set_reconciled(True)
 						tx.set_match_num(rx.get_tx_id())
@@ -175,10 +153,10 @@ def find_unpaired_transactions(transactions):
 						match = {"tx": tx, "rx":rx}
 						matched_pairs.append(match)
 						matched_flag = True
-						#print(f"TX:{tx}\nRX:{rx}")
+						#logging.debug(f"TX:{tx}\nRX:{rx}")
 					elif (tx_ts > rx_ts) and \
 						(tx_ts - rx_ts < datetime.timedelta(hours=12)):
-						#print("Yeehaw!! Match found!")
+						#logging.debug("Yeehaw!! Match found!")
 						rx.set_reconciled(True)
 						tx.set_reconciled(True)
 						tx.set_match_num(rx.get_tx_id())
@@ -186,19 +164,19 @@ def find_unpaired_transactions(transactions):
 						match = {"tx": tx, "rx":rx}
 						matched_pairs.append(match)
 						matched_flag = True
-						#print(f"TX:{tx}\nRX:{rx}")
+						#logging.debug(f"TX:{tx}\nRX:{rx}")
 					#else:
-						#print("Missed it by that much...")
-						#print(f"RX:{rx}\nTX:{tx}")
+						#logging.debug("Missed it by that much...")
+						#logging.debug(f"RX:{rx}\nTX:{tx}")
 
 	return sent, receive, matched_pairs
 
 def find_paired_transactions2(transactions):
 	#transactions_copy = copy.deepcopy(transactions)
 	matched_pairs = []
-	#print("-------------------------------------------------")
+	#logging.debug("-------------------------------------------------")
 	for counter, tx in enumerate(transactions):
-		# print(f"TX: {tx}")
+		# logging.debug(f"TX: {tx}")
 		if tx.get_reconciled():
 			continue
 		# When see a Send, check the next 10 transactions to find a match.
@@ -212,16 +190,16 @@ def find_paired_transactions2(transactions):
 					(rx.get_in_asset() == tx.get_out_asset()):
 					rx_qty = rx.get_in_qty()
 					tx_qty = tx.get_out_qty()
-					#print(f"Looks Promising... rx:{rx_qty} & tx:{tx_qty}")
+					#logging.debug(f"Looks Promising... rx:{rx_qty} & tx:{tx_qty}")
 					if rx_qty == tx_qty:
-						#print("Yep!! Match found!")
+						#logging.debug("Yep!! Match found!")
 						transactions_copy[counter].set_reconciled(True)
 						transactions_copy[index].set_reconciled(True)
 						transactions_copy[counter].set_match_num(rx.get_tx_id())
 						transactions_copy[index].set_match_num(tx.get_tx_id())
 						match = {"tx": tx, "rx": rx}
 						matched_pairs.append(match)
-						#print(f"TX:{tx}\nRX:{rx}")
+						#logging.debug(f"TX:{tx}\nRX:{rx}")
 						break
 				index -= 1
 				rx = transactions_copy[index]
@@ -237,16 +215,16 @@ def find_paired_transactions2(transactions):
 				   (rx.get_in_asset() == tx.get_out_asset()):
 					rx_qty = rx.get_in_qty()
 					tx_qty = tx.get_out_qty()
-					#print(f"Looks Promising... rx:{rx_qty} & tx:{tx_qty}")
+					#logging.debug(f"Looks Promising... rx:{rx_qty} & tx:{tx_qty}")
 					if rx_qty == tx_qty:
-						#print("Yep!! Match found!")
+						#logging.debug("Yep!! Match found!")
 						transactions_copy[counter].set_reconciled(True)
 						transactions_copy[index].set_reconciled(True)
 						transactions_copy[counter].set_match_num(rx.get_tx_id())
 						transactions_copy[index].set_match_num(tx.get_tx_id())
 						match = {"tx": tx, "rx": rx}
 						matched_pairs.append(match)
-						#print(f"TX:{tx}\nRX:{rx}")
+						#logging.debug(f"TX:{tx}\nRX:{rx}")
 						break
 				index += 1
 				rx = transactions_copy[index]
@@ -260,7 +238,7 @@ def find_paired_transactions3(transactions):
 	matched_pairs = []
 	print("-------------------------------------------------")
 	for counter, tx in enumerate(transactions_copy):
-		# print(f"TX: {tx}")
+		# logging.debug(f"TX: {tx}")
 		#print(f"Moving on to next transaction")
 		if tx.get_reconciled():
 			continue
@@ -276,16 +254,16 @@ def find_paired_transactions3(transactions):
 						(rx.get_in_asset() == tx.get_out_asset()):
 					rx_qty = rx.get_in_qty()
 					tx_qty = tx.get_out_qty()
-					#print(f"Looks Promising... rx:{rx_qty} & tx:{tx_qty}")
+					#logging.debug(f"Looks Promising... rx:{rx_qty} & tx:{tx_qty}")
 					if rx_qty == tx_qty:
-						#print("Yep!! Match found!")
+						#logging.debug("Yep!! Match found!")
 						transactions_copy[counter].set_reconciled(True)
 						transactions_copy[index].set_reconciled(True)
 						transactions_copy[counter].set_match_num(rx.get_tx_id())
 						transactions_copy[index].set_match_num(tx.get_tx_id())
 						match = {"tx": tx, "rx": rx}
 						matched_pairs.append(match)
-						#print(f"TX:{tx}\nRX:{rx}")
+						#logging.debug(f"TX:{tx}\nRX:{rx}")
 						break
 				index += 1
 				rx = transactions_copy[index]
@@ -298,16 +276,16 @@ def find_paired_transactions3(transactions):
 						(rx.get_in_asset() == tx.get_out_asset()):
 					rx_qty = rx.get_in_qty()
 					tx_qty = tx.get_out_qty()
-					#print(f"Looks Promising... rx:{rx_qty} & tx:{tx_qty}")
+					#logging.debug(f"Looks Promising... rx:{rx_qty} & tx:{tx_qty}")
 					if rx_qty == tx_qty:
-						#print("Yep!! Match found!")
+						#logging.debug("Yep!! Match found!")
 						transactions_copy[counter].set_reconciled(True)
 						transactions_copy[index].set_reconciled(True)
 						transactions_copy[counter].set_match_num(rx.get_tx_id())
 						transactions_copy[index].set_match_num(tx.get_tx_id())
 						match = {"tx": tx, "rx": rx}
 						matched_pairs.append(match)
-						#print(f"TX:{tx}\nRX:{rx}")
+						#logging.debug(f"TX:{tx}\nRX:{rx}")
 						break
 				index -= 1
 				rx = transactions_copy[index]
@@ -321,7 +299,7 @@ def find_paired_transactions4(transactions):
 	matched_pairs = []
 	#print("-------------------------------------------------")
 	for counter, tx in enumerate(transactions):
-		# print(f"TX: {tx}")
+		# logging.debug(f"TX: {tx}")
 		#print(f"Moving on to next transaction")
 		if tx.get_reconciled():
 			continue
@@ -337,16 +315,16 @@ def find_paired_transactions4(transactions):
 						(rx.get_in_asset() == tx.get_out_asset()):
 					rx_qty = rx.get_in_qty()
 					tx_qty = tx.get_out_qty()
-					#print(f"Looks Promising... rx:{rx_qty} & tx:{tx_qty}")
+					#logging.debug(f"Looks Promising... rx:{rx_qty} & tx:{tx_qty}")
 					if rx_qty == tx_qty:
-						#print("Yep!! Match found!")
+						#logging.debug("Yep!! Match found!")
 						tx.set_reconciled(True)
 						rx.set_reconciled(True)
 						tx.set_match_num(rx.get_tx_id())
 						rx.set_match_num(tx.get_tx_id())
 						match = {"tx": tx, "rx": rx}
 						matched_pairs.append(match)
-						#print(f"TX:{tx}\nRX:{rx}")
+						#logging.debug(f"TX:{tx}\nRX:{rx}")
 						break
 				index += 1
 				rx = transactions[index]
@@ -359,16 +337,16 @@ def find_paired_transactions4(transactions):
 						(rx.get_in_asset() == tx.get_out_asset()):
 					rx_qty = rx.get_in_qty()
 					tx_qty = tx.get_out_qty()
-					#print(f"Looks Promising... rx:{rx_qty} & tx:{tx_qty}")
+					#logging.debug(f"Looks Promising... rx:{rx_qty} & tx:{tx_qty}")
 					if rx_qty == tx_qty:
-						#print("Yep!! Match found!")
+						#logging.debug("Yep!! Match found!")
 						tx.set_reconciled(True)
 						rx.set_reconciled(True)
 						tx.set_match_num(rx.get_tx_id())
 						rx.set_match_num(tx.get_tx_id())
 						match = {"tx": tx, "rx": rx}
 						matched_pairs.append(match)
-						#print(f"TX:{tx}\nRX:{rx}")
+						#logging.debug(f"TX:{tx}\nRX:{rx}")
 						break
 				index -= 1
 				rx = transactions[index]
@@ -379,7 +357,7 @@ def find_paired_transactions4(transactions):
 	for tx in transactions:
 		if (tx.get_trade_type() == 'Send') and (tx.get_match_num() == 0):
 			unmatched_tx.append(tx)
-	#print(f"Unmatched length = {len(unmatched_tx)}")
+	#logging.debug(f"Unmatched length = {len(unmatched_tx)}")
 	function_desc_string = "\n".join(
 		[f"An inspection found {len(unmatched_tx)} 'Send' transactions could not be matched",
 		 "    to a 'Receive' transaction.",

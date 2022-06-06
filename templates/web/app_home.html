@@ -4,15 +4,14 @@
   <section class="app-card py-5">
     <div class="row align-items-center">
       <div class="col-md">
-        <h3>You're Signed In!</h3>
+        <h4>You're Signed In!</h4>
         <section class="app-card py-5">
-          <form method="POST" enctype="multipart/form-data" action={% url 'web:home' %}>
+          <form method="POST" enctype="multipart/form-data" action={% url 'web:home' %} >
               {% csrf_token %}
               <fieldset class="form-control">
                   <legend class="border-bottom mb-4">Crypto History File Upload</legend>
                   <p>This is where you will upload your tax file from Zen Ledger (normally this is a .csv file)</p>
                   <p><b>Crypto Tax Checker</b> analyzes this file and alerts you to possible ways to save on taxes.</p>
-                  <br>
                   {{ form }}
                   <br>
               <div class="form-group">
@@ -29,6 +28,7 @@
                   <h1 class="pg-title">Calculated Net Sales </h1>
                   <h2 class="pg-subtitle">Below are the crypto sales during the year</h2>
                   <hr>
+                  {% if summary %}
                   <cryptotx class="media content-section">
                       <div class="media-body">
                           {% for li in summary %}
@@ -43,6 +43,11 @@
                           {% endfor %}
                       </div>
                   </cryptotx>
+                  {% else %}
+                    <div class="alert alert-info">
+                    You need to Subscribe to see these results. <a href="{{ subscription_urls.subscription_details }}">Upgrade Here!</a>
+                    </div>
+                  {% endif %}
               </div>
           </div>
       </div>
@@ -63,6 +68,7 @@
                  Inspect the following transactions closely because they may be reported as sales and show up as capital gains.
               </p>
               <hr>
+                {% if subscription %}
                 {% for transaction in duplicate_object_list %}
                 <cryptotx class="media content-section">
                     <div class="media-body">
@@ -81,6 +87,11 @@
                     </div>
                 </cryptotx>
                 {% endfor %}
+                {% else %}
+                <div class="alert alert-info">
+                    You need to Subscribe to see these results. <a href="{{ subscription_urls.subscription_details }}">Upgrade Here!</a>
+                </div>
+                {% endif %}
             </div>
           </div>
       </div>
@@ -110,6 +121,7 @@
                   Inspect the following transactions closely because they mayy be reported as sales and show up as capital gains.
                   </p>
                   <hr>
+                  {% if subscription %}
                   {% for transaction in nomatch_object_list %}
                   <cryptotx class="media content-section">
                       <div class="media-body">
@@ -128,6 +140,11 @@
                       </div>
                   </cryptotx>
                   {% endfor %}
+                  {% else %}
+                  <div class="alert alert-info">
+                      You need to Subscribe to see these results. <a href="{{ subscription_urls.subscription_details }}">Upgrade Here!</a>
+                  </div>
+                  {% endif %}
               </div>
           </div>
       </div>
