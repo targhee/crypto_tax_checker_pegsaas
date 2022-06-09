@@ -10,6 +10,7 @@ from typing import List, Generator, Dict
 
 from .exceptions import SubscriptionConfigError
 from .serializers import PlanSerializer, ProductSerializer
+from django.conf import settings
 
 
 @dataclass
@@ -139,9 +140,10 @@ ACTIVE_PLAN_INTERVALS = [
 
 # These are the products that will be shown to users in the UI and allowed to be associated
 # with plans on your side
+# Live Products
 ACTIVE_PRODUCTS = [
     ProductMetadata(
-        stripe_id='prod_Ld8lQJEx9m3Uvb',
+        stripe_id='prod_LcnegCJId70RfU',
         name=_('Standard'),
         description=_('Standard Crypto Tax Check'),
         is_default=True,
@@ -152,6 +154,20 @@ ACTIVE_PRODUCTS = [
         ],
     ),
 ]
+# Test Products
+# ACTIVE_PRODUCTS = [
+#     ProductMetadata(
+#         stripe_id='prod_Ld8lQJEx9m3Uvb',
+#         name=_('Standard'),
+#         description=_('Standard Crypto Tax Check'),
+#         is_default=True,
+#         features=[
+#             _('Check for Duplicate Transactions'),
+#             _('List Transactions likely to be reported as Sales'),
+#             _('List Matches'),
+#         ],
+#     ),
+# ]
 
 ACTIVE_PRODUCTS_BY_ID = {
     p.stripe_id: p for p in ACTIVE_PRODUCTS
