@@ -68,12 +68,12 @@ def home(request):
                 for year in range(2015, int(datetime.now().year)):
                     str_year = str(year)
                     # Get all the sales from this year
-                    year_sales = [x.out_qty for x in all_sales if (x.timestamp.strftime("%Y") == str_year)]
+                    year_sales = [x.in_qty for x in all_sales if (x.timestamp.strftime("%Y") == str_year)]
                     # Grab all the duplicate sales from that year
-                    year_duplicate_sales = [x.out_qty for x in dups if (x.timestamp.strftime("%Y") == str_year) and \
+                    year_duplicate_sales = [x.in_qty for x in dups if (x.timestamp.strftime("%Y") == str_year) and \
                                             (x.trade_type == 'sell' or x.trade_type == 'Send')]
                     # Grab all the unmatches sales from that year
-                    year_unmatched_sales = [x.out_qty for x in no_matches if (x.timestamp.strftime("%Y") == str_year)]
+                    year_unmatched_sales = [x.in_qty for x in no_matches if (x.timestamp.strftime("%Y") == str_year)]
                     # Grab all the rewards from that year
                     year_rewards = [x.out_qty for x in rewards if (x.timestamp.strftime("%Y") == str_year)]
                     # Sums
