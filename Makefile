@@ -23,6 +23,9 @@ migrations: ## Create DB migrations in the container
 migrate: ## Run DB migrations in the container
 	@docker-compose exec web python manage.py migrate
 
+subs: ## Get subscription data
+	@docker-compose exec web python manage.py bootstrap_subscriptions
+
 shell: ## Get a Django shell
 	@docker-compose exec web python manage.py shell
 

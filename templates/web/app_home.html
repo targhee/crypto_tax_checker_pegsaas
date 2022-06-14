@@ -32,12 +32,11 @@
                   <cryptotx class="media content-section">
                       <div class="media-body">
                           {% for li in summary %}
-                            {% if li.sum_total %}
+                            {% if li.total_sales %}
                               <small class="text-muted border border-2">{{ li.year }}     Total Sales: {{ li.total_sales }}</small> <br>
                               <small class="text-muted border border-2">{{ li.year }}     Total Duplicate Sales: {{ li.duplicate_sales }}</small> <br>
+                              <small class="text-muted border border-2">{{ li.year }}     Total Rewards: {{ li.rewards }}</small> <br>
                               <small class="text-muted border border-2">{{ li.year }}     Total Unmatched Sales: {{ li.unmatched_sales }}</small> <br>
-                              <small class="text-muted">                            -----------------------------</small> <br>
-                              <small class="text-muted border border-2">{{ li.year }}               Total Sales: {{ li.sum_total }}</small> <br>
                               <hr>
                             {% endif %}
                           {% endfor %}

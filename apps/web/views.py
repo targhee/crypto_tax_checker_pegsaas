@@ -62,6 +62,7 @@ def home(request):
                 no_matches = Transaction.objects.filter(Q(match_num="0") & Q(trade_type="Send") | Q(trade_type='sell'))
                 num_nomatches = no_matches.count()
                 all_sales = Transaction.objects.filter(Q(trade_type='sell') | Q(trade_type='Send'))
+                rewards = Transaction.objects.filter(Q(trade_type='misc_reward') | Q(trade_type='staking_reward') | Q(trade_type='airdrop'))
                 summary = []
                 # Create a list of all the years from 2015 until now
                 for year in range(2015, int(datetime.now().year)):
@@ -73,16 +74,20 @@ def home(request):
                                             (x.trade_type == 'sell' or x.trade_type == 'Send')]
                     # Grab all the unmatches sales from that year
                     year_unmatched_sales = [x.out_qty for x in no_matches if (x.timestamp.strftime("%Y") == str_year)]
+                    # Grab all the rewards from that year
+                    year_rewards = [x.out_qty for x in rewards if (x.timestamp.strftime("%Y") == str_year)]
+                    # Sums
                     sum_total_sales = sum(list(year_sales))
                     sum_duplicate_sales = sum(list(year_duplicate_sales))
                     sum_unmatched_sales = sum(list(year_unmatched_sales))
-                    sum_sales = sum_total_sales + sum_duplicate_sales + sum_unmatched_sales
+                    sum_rewards = sum(list(year_rewards))
+                    #sum_sales = sum_total_sales + sum_duplicate_sales + sum_unmatched_sales
                     summary.append({
                         'year' : year,
                         'total_sales' : sum_total_sales,
                         'duplicate_sales' : sum_duplicate_sales,
                         'unmatched_sales' : sum_unmatched_sales,
-                        'sum_total' : sum_sales
+                        'rewards': sum_rewards,
                     })
                 #print(f"Summary = {summary}")
                 return render(request, 'web/app_home.html', context={

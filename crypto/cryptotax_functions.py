@@ -18,8 +18,16 @@ def populate_transaction_types(transactions):
 		elif (tx.get_trade_type() == "sell") or (tx.get_trade_type() == "Send"):
 			logging.info(f"Sale: {tx}")
 			sales.append(tx)
+		elif (tx.get_trade_type() == "misc_reward") or \
+				(tx.get_trade_type() == "staking_reward") or \
+				(tx.get_trade_type() == "airdrop") :
+			logging.info(f"Reward: {tx}")
+			reward.append(tx)
+		else:
+			logging.info(f"Unkown Transaction: {tx}")
+			unknown.append(tx)
 	logging.info("-------------------------------------------------")
-	return purchases, sales
+	return purchases, sales, rewards
 
 def reconcile_transactions(purchases, sales) :
 	tax_match = []
