@@ -246,6 +246,10 @@ ANYMAIL = {
     "MAILGUN_API_KEY": os.environ.get('ANYMAIL_API_KEY', '"key-****"'),
     "MAILGUN_SENDER_DOMAIN": 'CryptoTaxChecker.com',
 }
+
+SERVER_EMAIL = 'noreply@{{project_name}}.com'
+DEFAULT_FROM_EMAIL = 'support@{{project_name}.com'
+ADMINS = [('Crypto Tax Checker Support', 'support@{{project_name}}.com'),]
 # Django sites
 
 SITE_ID = 1
